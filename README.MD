@@ -1,3 +1,3 @@
-# Mecanum Wheels Simulation
+# LFR Simulation in an Arena
 
-Simulation of a mecanum wheeled robot in ROS2/Gazebo.
+Simulation of a Line Following Robot (LFR) in an arena. 
