@@ -64,7 +64,7 @@ def generate_launch_description():
         arguments=[
             "-name", "my_robot",
             "-topic", "robot_description",
-            "-x", "2.03", "-y", "-0.3", "-z", "7", "-Y", "0.0"  # Initial spawn position
+            "-x", "0.00", "-y", "0.00", "-z", "0.2", "-Y", "0.0"  # Initial spawn position
         ],
 
         output="screen",
