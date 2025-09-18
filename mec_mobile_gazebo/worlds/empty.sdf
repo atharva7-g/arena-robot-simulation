@@ -75,5 +75,42 @@
         </visual>
       </link>
     </model>
+
+    <model name="arena">
+  <static>false</static>
+  <pose>0 0 0.25 1.570795 0.0 0.0</pose> <!-- x y z R P Y -->
+  <link name="link">
+  <inertial>
+      <mass>1000</mass>
+      <inertia>
+        <ixx>1</ixx>
+        <iyy>1</iyy>
+        <izz>1</izz>
+      </inertia>
+    </inertial>
+    <visual name="visual">
+      <geometry>
+        <mesh>
+          <uri>file://home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>   <!-- use relative or absolute path -->
+          <scale>0.001 0.001 0.001</scale> <!-- adjust scaling if needed -->
+        </mesh>
+      </geometry>
+      <material>
+        <ambient>0.7 0.7 0.7 1</ambient>
+        <diffuse>0.7 0.7 0.7 1</diffuse>
+      </material>
+    </visual>
+
+    <collision name="collision">
+      <geometry>
+        <mesh>
+          <uri>file://home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>
+          <scale>0.001 0.001 0.001</scale>
+        </mesh>
+      </geometry>
+    </collision>
+  </link>
+</model>
+
   </world>
 </sdf>
