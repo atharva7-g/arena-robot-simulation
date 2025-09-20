@@ -62,9 +62,9 @@ def generate_launch_description():
         package="ros_gz_sim",
         executable="create",
         arguments=[
-            "-name", "my_robot",
+            "-name", "lfr",
             "-topic", "robot_description",
-            "-x", "0.00", "-y", "0.00", "-z", "0.2", "-Y", "0.0"  # Initial spawn position
+            "-x", "-1.94", "-y", "0.78", "-z", "0.2", "-Y", "-1.6"  # Initial spawn position
         ],
 
         output="screen",

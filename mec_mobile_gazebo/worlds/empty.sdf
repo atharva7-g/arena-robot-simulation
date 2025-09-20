@@ -91,26 +91,67 @@
     <visual name="visual">
       <geometry>
         <mesh>
-          <uri>file://home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>   <!-- use relative or absolute path -->
+          <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>   <!-- use relative or absolute path -->
           <scale>0.001 0.001 0.001</scale> <!-- adjust scaling if needed -->
         </mesh>
       </geometry>
       <material>
-        <ambient>0.7 0.7 0.7 1</ambient>
-        <diffuse>0.7 0.7 0.7 1</diffuse>
+        <ambient>0.0 0.0 0.0 1</ambient>
+        <diffuse>0.0 0.0 0.0 1</diffuse>
       </material>
     </visual>
 
     <collision name="collision">
       <geometry>
         <mesh>
-          <uri>file://home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>
+          <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh>
       </geometry>
     </collision>
   </link>
 </model>
+
+    <!-- Arm on Wheels Model -->
+    <model name="sarm">
+      <static>false</static> <!-- allows it to move -->
+      <pose>1 0.2 0.1 1.570795 0 0</pose> <!-- position (x,y,z) and orientation (R,P,Y) -->
+      <link name="link">
+        <inertial>
+          <mass>5.0</mass>
+          <inertia>
+            <ixx>0.1</ixx>
+            <iyy>0.1</iyy>
+            <izz>0.1</izz>
+          </inertia>
+        </inertial>
+
+        <!-- Visual -->
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.stl</uri>
+              <scale>0.001 0.001 0.001</scale> <!-- adjust scale if needed -->
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.8 1</ambient>
+            <diffuse>0.2 0.2 0.8 1</diffuse>
+          </material>
+        </visual>
+
+        <!-- Collision -->
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
 
   </world>
 </sdf>
