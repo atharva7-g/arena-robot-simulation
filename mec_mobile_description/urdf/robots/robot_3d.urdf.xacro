@@ -155,11 +155,11 @@
 
     <!-- 2.5.1 Camera physical properties -->
     <joint type="fixed" name="camera_joint">
-      <origin xyz="0.2 0 0.05" rpy="0 1.57 0" />
+      <origin xyz="0.2 0 0.15" rpy="0 1.5708 0" />
       <child link="camera_link" />
       <parent link="base_link" />
-      <axis xyz="0 1 0" />
     </joint>
+
 
     <link name='camera_link'>
       <pose>0 0 0 0 0 0</pose>
@@ -185,17 +185,58 @@
     </link>
 
     <gazebo reference="camera_link">
-      <material>Gazebo/Red</material>
+      <sensor type="camera" name="camera_sensor_rig">
+        <update_rate>30.0</update_rate>
+
+        <visualize>true</visualize>
+
+        <camera name="camera">
+          <horizontal_fov>0.2</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>8.0</far>
+          </clip>
+        </camera>
+
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <camera_name>camera</camera_name>
+          <frame_name>camera_link_optical</frame_name>
+
+          <ros>
+            <namespace>/camera</namespace>
+            <remapping>image_raw:=image_raw</remapping>
+            <remapping>camera_info:=camera_info</remapping>
+          </ros>
+        </plugin>
+      </sensor>
     </gazebo>
 
+
     <joint type="fixed" name="camera_optical_joint">
-      <origin xyz="0 0 0" rpy="-1.5707 0 -1.5707" />
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708" />
       <child link="camera_link_optical" />
       <parent link="camera_link" />
     </joint>
 
     <link name="camera_link_optical">
+      <inertial>
+        <mass value="0.0001" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="1e-6" iyy="1e-6" izz="1e-6" ixy="0" ixz="0" iyz="0" />
+      </inertial>
+
+      <visual>
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+      </visual>
     </link>
+
     <!-- 2.5.1 End -->
 
 </robot>
