@@ -1,1 +1,0 @@
-/home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/launch/robot_state_publisher.launch.py

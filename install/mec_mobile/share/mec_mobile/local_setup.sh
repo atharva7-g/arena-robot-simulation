@@ -1,1 +1,0 @@
-/home/hephan/lfr_ws/src/arena-robot-simulation/build/mec_mobile/ament_cmake_environment_hooks/local_setup.sh
