@@ -91,7 +91,7 @@
     <visual name="visual">
       <geometry>
         <mesh>
-          <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>   <!-- use relative or absolute path -->
+          <uri>file:///home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>   <!-- use relative or absolute path -->
           <scale>0.001 0.001 0.001</scale> <!-- adjust scaling if needed -->
         </mesh>
       </geometry>
@@ -104,7 +104,7 @@
     <collision name="collision">
       <geometry>
         <mesh>
-          <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>
+          <uri>file:///home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/arena/arena.stl</uri>
           <scale>0.001 0.001 0.001</scale>
         </mesh>
       </geometry>
@@ -130,7 +130,7 @@
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.stl</uri>
+              <uri>file:///home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.dae</uri>
               <scale>0.001 0.001 0.001</scale> <!-- adjust scale if needed -->
             </mesh>
           </geometry>
@@ -144,7 +144,7 @@
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>file:///home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.stl</uri>
+              <uri>file:///home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/sarm.dae</uri>
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
