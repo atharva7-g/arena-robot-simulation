@@ -155,7 +155,7 @@
 
     <!-- 2.5.1 Camera physical properties -->
     <joint type="fixed" name="camera_joint">
-      <origin xyz="0.2 0 0.15" rpy="0 1.5708 0" />
+      <origin xyz="0.2 0 0.06" rpy="0 1.5708 0" />
       <child link="camera_link" />
       <parent link="base_link" />
     </joint>

@@ -78,7 +78,7 @@
 
     <model name="arena">
   <static>true</static>
-  <pose>0 0 0.02 1.570795 0.0 0.0</pose> <!-- x y z R P Y -->
+  <pose>0 0 0 1.570795 0.0 0.0</pose> <!-- x y z R P Y -->
   <link name="link">
   <inertial>
       <mass>1000</mass>

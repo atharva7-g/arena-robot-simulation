@@ -1,112 +1,230 @@
-#!/usr/bin/env python3
-
 import rclpy
 from rclpy.node import Node
-import cv2
-import numpy as np
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
-from cv_bridge import CvBridge, CvBridgeError
+from cv_bridge import CvBridge
+import cv2
+import numpy as np
 
 class LineFollower(Node):
     def __init__(self):
-        # Initialize the ROS 2 node
         super().__init__('line_follower_node')
+        self.get_logger().info('Line Follower Node Initialized (ROS 2)')
 
-        # Create a CvBridge object
-        self.bridge = CvBridge()
+        # --- TUNING PARAMETERS ---
+        # These are the values you'll need to adjust for your specific robot and track
+        self.LINEAR_SPEED = 0.15          # Constant forward speed of the robot (m/s)
+        self.KP = 0.004                   # Proportional gain: How strongly it reacts to the error
+        self.KD = 0.006                   # Derivative gain: How much it dampens oscillations
+        self.MAX_ANGULAR_SPEED = 1.2      # Maximum turning speed (rad/s)
+        self.THRESHOLD_VALUE = 100        # Black/White threshold for image processing
+        self.ROI_TOP_PERCENT = 0.6        # Percentage from the top of the image to start the Region of Interest
+        # --- END TUNING ---
 
-        # Create a subscriber to the camera's image topic
-        self.image_sub = self.create_subscription(
+        # Create subscribers and publishers
+        self.image_subscriber = self.create_subscription(
             Image,
-            '/camera/image',
+            '/camera/image',  # Corrected topic name
             self.image_callback,
             10)
+        self.cmd_vel_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        # Create a publisher for Twist messages
-        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
-
-        # Create a Twist message object
-        self.twist = Twist()
-
-        # PID controller constants (tuning required)
-        self.kp = 0.005 # Proportional gain
-        self.ki = 0.0   # Integral gain
-        self.kd = 0.01  # Derivative gain
-
-        # PID state variables
-        self.previous_error = 0.0
-        self.integral = 0.0
-
-        self.get_logger().info("Line Follower Node Initialized (ROS 2)")
+        # Initialize CvBridge and other variables
+        self.bridge = CvBridge()
+        self.last_error = 0
+        self.get_logger().info('Node setup complete. Waiting for images...')
 
     def image_callback(self, msg):
-        """
-        Processes incoming images to detect the line and calculate control commands.
-        """
+        """Callback function for processing incoming camera images."""
         try:
-            # Convert the ROS Image message to an OpenCV image
-            cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-        except CvBridgeError as e:
-            self.get_logger().error(f"CvBridge Error: {e}")
+            # Convert ROS Image message to OpenCV image
+            frame = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
+        except Exception as e:
+            self.get_logger().error(f'Failed to convert image: {e}')
             return
 
-        # --- Image Processing ---
+        # 1. CROP THE IMAGE (REGION OF INTEREST)
+        # We only care about the part of the image with the line in front of the robot
+        height, width, _ = frame.shape
+        roi_top = int(height * self.ROI_TOP_PERCENT)
+        roi = frame[roi_top:, :]
 
-        height, width, _ = cv_image.shape
-        roi_start_row = int(height / 2)
-        roi = cv_image[roi_start_row:, :]
-
-        # 1. Grayscale and Blur
+        # 2. PROCESS IMAGE
+        # Convert to grayscale, apply a binary threshold to get a black and white image
         gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
+        # The threshold is inverted because the line is black (darker)
+        _, mask = cv2.threshold(gray, self.THRESHOLD_VALUE, 255, cv2.THRESH_BINARY_INV)
 
-        # 2. Thresholding
-        _, thresh = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY_INV)
-
-        # 3. Find Centroid
-        M = cv2.moments(thresh)
+        # 3. FIND LINE CENTER
+        # Calculate the "center of mass" of the white pixels in the mask.
+        # This gives us the position of the line.
+        M = cv2.moments(mask)
+        twist_msg = Twist()
 
         if M['m00'] > 0:
+            # Calculate the x-coordinate of the line's center
             cx = int(M['m10'] / M['m00'])
 
-            # --- Control Logic ---
-            error = cx - (width / 2)
+            # Draw a circle on the line's center for visualization
+            cv2.circle(roi, (cx, int(roi.shape[0] / 2)), 10, (0, 255, 0), -1)
 
-            self.integral += error
-            derivative = error - self.previous_error
+            # --- PD CONTROLLER ---
+            # Calculate the error: difference between the image center and the line center
+            center_of_image = width // 2
+            error = cx - center_of_image
 
-            turn = self.kp * error + self.ki * self.integral + self.kd * derivative
-            self.previous_error = error
+            # Proportional term
+            p_term = self.KP * error
+            # Derivative term (helps to reduce wobbling)
+            d_term = self.KD * (error - self.last_error)
 
-            # Set velocities
-            self.twist.linear.x = 0.2
-            self.twist.angular.z = -turn
+            # Calculate the required angular velocity (steering)
+            angular_z = -(p_term + d_term)
 
+            # Clamp the angular velocity to the maximum allowed value
+            twist_msg.angular.z = max(-self.MAX_ANGULAR_SPEED, min(self.MAX_ANGULAR_SPEED, angular_z))
+            twist_msg.linear.x = self.LINEAR_SPEED
+            self.last_error = error
         else:
-            # No line detected, stop
-            self.twist.linear.x = 0.0
-            self.twist.angular.z = 0.0
+            # --- LOST LINE LOGIC ---
+            # If no line is detected (M['m00'] == 0), stop the robot.
+            self.get_logger().warn('Line not detected, stopping robot.')
+            twist_msg.linear.x = 0.0
+            twist_msg.angular.z = 0.0
 
-        # Publish the movement command
-        self.cmd_vel_pub.publish(self.twist)
+        # 4. PUBLISH THE TWIST MESSAGE
+        self.cmd_vel_publisher.publish(twist_msg)
 
-        # Optional: Display the processed image
-        cv2.imshow("Processed Image", thresh)
+        # 5. DISPLAY THE PROCESSED IMAGE (Optional, but helpful for debugging)
+        cv2.imshow("Processed Image", roi)
+        cv2.imshow("Mask", mask)
         cv2.waitKey(1)
 
 def main(args=None):
     rclpy.init(args=args)
-    line_follower = LineFollower()
+    line_follower_node = LineFollower()
     try:
-        rclpy.spin(line_follower)
+        rclpy.spin(line_follower_node)
     except KeyboardInterrupt:
-        line_follower.get_logger().info('Node stopped cleanly')
+        line_follower_node.get_logger().info('Node stopped cleanly')
     finally:
-        # Destroy the node explicitly
-        line_follower.destroy_node()
+        line_follower_node.destroy_node()
         rclpy.shutdown()
-        cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
+    import rclpy
+    from rclpy.node import Node
+    from sensor_msgs.msg import Image
+    from geometry_msgs.msg import Twist
+    from cv_bridge import CvBridge
+    import cv2
+    import numpy as np
+
+    class LineFollower(Node):
+        def __init__(self):
+            super().__init__('line_follower_node')
+            self.get_logger().info('Line Follower Node Initialized (ROS 2)')
+
+            # --- TUNING PARAMETERS ---
+            # These are the values you'll need to adjust for your specific robot and track
+            self.LINEAR_SPEED = 0.15          # Constant forward speed of the robot (m/s)
+            self.KP = 0.004                   # Proportional gain: How strongly it reacts to the error
+            self.KD = 0.006                   # Derivative gain: How much it dampens oscillations
+            self.MAX_ANGULAR_SPEED = 1.2      # Maximum turning speed (rad/s)
+            self.THRESHOLD_VALUE = 100        # Black/White threshold for image processing
+            self.ROI_TOP_PERCENT = 0.6        # Percentage from the top of the image to start the Region of Interest
+            # --- END TUNING ---
+
+            # Create subscribers and publishers
+            self.image_subscriber = self.create_subscription(
+                Image,
+                '/camera/image',  # Corrected topic name
+                self.image_callback,
+                10)
+            self.cmd_vel_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+
+            # Initialize CvBridge and other variables
+            self.bridge = CvBridge()
+            self.last_error = 0
+            self.get_logger().info('Node setup complete. Waiting for images...')
+
+        def image_callback(self, msg):
+            """Callback function for processing incoming camera images."""
+            try:
+                # Convert ROS Image message to OpenCV image
+                frame = self.bridge.imgmsg_to_cv2(msg, 'bgr8')
+            except Exception as e:
+                self.get_logger().error(f'Failed to convert image: {e}')
+                return
+
+            # 1. CROP THE IMAGE (REGION OF INTEREST)
+            # We only care about the part of the image with the line in front of the robot
+            height, width, _ = frame.shape
+            roi_top = int(height * self.ROI_TOP_PERCENT)
+            roi = frame[roi_top:, :]
+
+            # 2. PROCESS IMAGE
+            # Convert to grayscale, apply a binary threshold to get a black and white image
+            gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+            # The threshold is inverted because the line is black (darker)
+            _, mask = cv2.threshold(gray, self.THRESHOLD_VALUE, 255, cv2.THRESH_BINARY_INV)
+
+            # 3. FIND LINE CENTER
+            # Calculate the "center of mass" of the white pixels in the mask.
+            # This gives us the position of the line.
+            M = cv2.moments(mask)
+            twist_msg = Twist()
+
+            if M['m00'] > 0:
+                # Calculate the x-coordinate of the line's center
+                cx = int(M['m10'] / M['m00'])
+
+                # Draw a circle on the line's center for visualization
+                cv2.circle(roi, (cx, int(roi.shape[0] / 2)), 10, (0, 255, 0), -1)
+
+                # --- PD CONTROLLER ---
+                # Calculate the error: difference between the image center and the line center
+                center_of_image = width // 2
+                error = cx - center_of_image
+
+                # Proportional term
+                p_term = self.KP * error
+                # Derivative term (helps to reduce wobbling)
+                d_term = self.KD * (error - self.last_error)
+
+                # Calculate the required angular velocity (steering)
+                angular_z = -(p_term + d_term)
+
+                # Clamp the angular velocity to the maximum allowed value
+                twist_msg.angular.z = max(-self.MAX_ANGULAR_SPEED, min(self.MAX_ANGULAR_SPEED, angular_z))
+                twist_msg.linear.x = self.LINEAR_SPEED
+                self.last_error = error
+            else:
+                # --- LOST LINE LOGIC ---
+                # If no line is detected (M['m00'] == 0), stop the robot.
+                self.get_logger().warn('Line not detected, stopping robot.')
+                twist_msg.linear.x = 0.0
+                twist_msg.angular.z = 0.0
+
+            # 4. PUBLISH THE TWIST MESSAGE
+            self.cmd_vel_publisher.publish(twist_msg)
+
+            # 5. DISPLAY THE PROCESSED IMAGE (Optional, but helpful for debugging)
+            cv2.imshow("Processed Image", roi)
+            cv2.imshow("Mask", mask)
+            cv2.waitKey(1)
+
+    def main(args=None):
+        rclpy.init(args=args)
+        line_follower_node = LineFollower()
+        try:
+            rclpy.spin(line_follower_node)
+        except KeyboardInterrupt:
+            line_follower_node.get_logger().info('Node stopped cleanly')
+        finally:
+            line_follower_node.destroy_node()
+            rclpy.shutdown()
+
+    if __name__ == '__main__':
+        main()
