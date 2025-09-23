@@ -203,16 +203,6 @@
           </clip>
         </camera>
 
-        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-          <camera_name>camera</camera_name>
-          <frame_name>camera_link_optical</frame_name>
-
-          <ros>
-            <namespace>/camera</namespace>
-            <remapping>image_raw:=image_raw</remapping>
-            <remapping>camera_info:=camera_info</remapping>
-          </ros>
-        </plugin>
       </sensor>
     </gazebo>
 
