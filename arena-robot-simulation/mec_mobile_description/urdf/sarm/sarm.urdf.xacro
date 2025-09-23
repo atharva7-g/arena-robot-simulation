@@ -2,10 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="sarm">
 
   <xacro:property name="mass" value="1.0" />
-  <xacro:property
-        name="scale"
-        value="0.001"
-    />  <!-- Increased from 0.001 to 0.01 -->
+  <xacro:property name="scale" value="0.01" />
   <xacro:property name="inertia_val" value="0.01" />
 
   <link name="sarm_link">
@@ -13,16 +10,17 @@
     <visual>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.stl"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.obj"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>
-      <material name="gray">
+      <!-- Remove or comment out the material section to use MTL materials -->
+      <!-- <material name="gray">
         <color rgba="0.7 0.7 0.7 1.0" />
-      </material>
+      </material> -->
     </visual>
 
-    <!-- Collision -->
+    <!-- Collision (keep STL for collision as it's more efficient) -->
     <collision>
       <geometry>
         <mesh

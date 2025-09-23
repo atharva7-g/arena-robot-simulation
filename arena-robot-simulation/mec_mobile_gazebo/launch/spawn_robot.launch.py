@@ -91,14 +91,17 @@ def generate_launch_description():
         arguments=[
             "-name", "sarm",
             "-topic", "/sarm_description",
-            "-x", "1.0", "-y", "0.0", "-z", "0.2",  # Initial position
-            "-Y", "0.0"
+            "-x", "1.0", "-y", "0.0", "-z", "0.2",   # Initial position
+            "-R", "-1.5708",                         # Roll = -π/2
+            "-P", "0.0",                             # Pitch = 0
+            "-Y", "0.0"                              # Yaw = 0
         ],
         output="screen",
         parameters=[
             {'use_sim_time': True},
         ]
     )
+
 
 
     robot_state_publisher_node = Node(
