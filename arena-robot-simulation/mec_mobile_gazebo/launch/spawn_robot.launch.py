@@ -1,4 +1,5 @@
 import os
+from pydoc import describe
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
@@ -30,11 +31,22 @@ def generate_launch_description():
         description='Name of the URDF description to load'
     )
 
+    sarm_arg = DeclareLaunchArgument(
+        'sarm', default_value='sarm.urdf.xacro',
+        description='Name of the URDF description to load'
+    )
+
     # Define the path to your URDF or Xacro file
     urdf_file_path = PathJoinSubstitution([
         pkg_urdf_path,  # Replace with your package name
         "urdf","robots",
         LaunchConfiguration('model')  # Replace with your URDF or Xacro file
+    ])
+
+    sarm_file_path = PathJoinSubstitution([
+        pkg_urdf_path,
+        "urdf","sarm",
+        LaunchConfiguration('sarm')
     ])
 
     world_launch = IncludeLaunchDescription(
@@ -73,6 +85,22 @@ def generate_launch_description():
         ]
     )
 
+    spawn_sarm_node = Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=[
+            "-name", "sarm",
+            "-topic", "/sarm_description",
+            "-x", "1.0", "-y", "0.0", "-z", "0.2",  # Initial position
+            "-Y", "0.0"
+        ],
+        output="screen",
+        parameters=[
+            {'use_sim_time': True},
+        ]
+    )
+
+
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -87,6 +115,24 @@ def generate_launch_description():
             ('/tf_static', 'tf_static')
         ]
     )
+
+    sarm_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='sarm_state_publisher',
+        output='screen',
+        parameters=[
+            {'robot_description': Command(['xacro ', sarm_file_path]),
+             'use_sim_time': True},
+        ],
+        remappings=[
+            ('robot_description', 'sarm_description'),  # Remap to sarm_description topic
+            # Uncomment these if you want separate TF trees:
+            # ('/tf', 'sarm/tf'),
+            # ('/tf_static', 'sarm/tf_static')
+        ]
+    )
+
 
     # Node to bridge messages like /cmd_vel and /odom
     gz_bridge_node = Node(
@@ -122,10 +168,14 @@ def generate_launch_description():
     launchDescriptionObject.add_action(rviz_launch_arg)
     launchDescriptionObject.add_action(world_arg)
     launchDescriptionObject.add_action(model_arg)
+    launchDescriptionObject.add_action(sarm_arg)
     launchDescriptionObject.add_action(world_launch)
-    launchDescriptionObject.add_action(rviz_node)
+    # launchDescriptionObject.add_action(rviz_node)
     launchDescriptionObject.add_action(spawn_urdf_node)
     launchDescriptionObject.add_action(robot_state_publisher_node)
     launchDescriptionObject.add_action(gz_bridge_node)
+    launchDescriptionObject.add_action(spawn_sarm_node)
+    launchDescriptionObject.add_action(sarm_state_publisher_node)
+
 
     return launchDescriptionObject

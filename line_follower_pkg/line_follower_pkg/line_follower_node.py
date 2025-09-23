@@ -16,7 +16,7 @@ class LineFollower(Node):
         self.LINEAR_SPEED = 0.15          # Constant forward speed of the robot (m/s)
         self.KP = 0.004                   # Proportional gain: How strongly it reacts to the error
         self.KD = 0.006                   # Derivative gain: How much it dampens oscillations
-        self.MAX_ANGULAR_SPEED = 1.2      # Maximum turning speed (rad/s)
+        self.MAX_ANGULAR_SPEED = 1.5      # Maximum turning speed (rad/s)
         self.THRESHOLD_VALUE = 100        # Black/White threshold for image processing
         self.ROI_TOP_PERCENT = 0.6        # Percentage from the top of the image to start the Region of Interest
         # --- END TUNING ---
