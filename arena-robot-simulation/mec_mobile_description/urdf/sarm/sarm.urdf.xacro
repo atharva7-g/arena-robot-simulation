@@ -10,7 +10,7 @@
     <visual>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.stl"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>
@@ -24,7 +24,7 @@
     <collision>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.stl"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>
