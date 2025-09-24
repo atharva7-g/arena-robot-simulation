@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="sarm">
 
   <xacro:property name="mass" value="1.0" />
-  <xacro:property name="scale" value="0.01" />
+  <xacro:property name="scale" value="0.001" />
   <xacro:property name="inertia_val" value="0.01" />
 
   <link name="sarm_link">
@@ -10,7 +10,7 @@
     <visual>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.obj"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.stl"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>

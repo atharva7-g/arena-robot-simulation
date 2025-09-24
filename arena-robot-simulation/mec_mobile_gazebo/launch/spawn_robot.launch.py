@@ -92,7 +92,7 @@ def generate_launch_description():
             "-name", "sarm",
             "-topic", "/sarm_description",
             "-x", "1.0", "-y", "0.0", "-z", "0.2",   # Initial position
-            "-R", "-1.5708",                         # Roll = -π/2
+            "-R", "+1.5708",                         # Roll = -π/2
             "-P", "0.0",                             # Pitch = 0
             "-Y", "0.0"                              # Yaw = 0
         ],
