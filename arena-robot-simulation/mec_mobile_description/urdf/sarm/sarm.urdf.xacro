@@ -5,12 +5,34 @@
   <xacro:property name="scale" value="0.001" />
   <xacro:property name="inertia_val" value="0.01" />
 
+  <xacro:property name="total_width" value="${0.19940 * scale}" />
+  <xacro:property name="wheel_width" value="${0.0304 * scale}" />
+  <xacro:property name="wheel_radius" value="${0.0325 * scale}" />
+  <xacro:property name="total_height" value="${0.16225 * scale}" />
+  <xacro:property name="base_length" value="${0.300 * scale}" />
+  <xacro:property name="centered_length" value="${0.238 * scale}" />
+  <xacro:property
+        name="base_x_offset"
+        value="${(centered_length - base_length) / 2}"
+    />
+  <xacro:property name="base_size_x" value="${base_length}" />
+  <xacro:property
+        name="base_size_y"
+        value="${total_width - (2 * wheel_width)}"
+    />
+  <xacro:property
+        name="base_size_z"
+        value="${total_height - (2 * wheel_radius)}"
+    />
+  <xacro:property name="base_mass" value="${4.6 * scale * scale * scale}" />
+
+
   <link name="sarm_link">
     <!-- Visual -->
     <visual>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.obj"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>
@@ -23,10 +45,7 @@
     <!-- Collision (keep STL for collision as it's more efficient) -->
     <collision>
       <geometry>
-        <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
-                    scale="${scale} ${scale} ${scale}"
-                />
+        <box size="${base_size_x} ${base_size_y} ${base_size_z}" />
       </geometry>
     </collision>
 
