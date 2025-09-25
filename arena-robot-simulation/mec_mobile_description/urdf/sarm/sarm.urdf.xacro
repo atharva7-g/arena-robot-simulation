@@ -32,7 +32,7 @@
     <visual>
       <geometry>
         <mesh
-                    filename="file://$(find mec_mobile_description)/meshes/sarm/sarm.obj"
+                    filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
                     scale="${scale} ${scale} ${scale}"
                 />
       </geometry>
