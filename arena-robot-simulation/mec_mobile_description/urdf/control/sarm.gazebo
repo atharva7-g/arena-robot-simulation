@@ -31,9 +31,9 @@
     </plugin>
 
     <plugin name="gz::sim::systems::OdometryPublisher" filename="gz-sim-odometry-publisher-system">
-      <odom_topic>odom</odom_topic>
-      <odom_frame>odom</odom_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
+      <odom_topic>/sarm/odom</odom_topic>
+      <odom_frame>/sarm/odom</odom_frame>
+      <!-- <robot_base_frame>base_footprint</robot_base_frame> -->
       <publish_tf>true</publish_tf>
       <tf_topic>tf</tf_topic>
       <odom_publish_frequency>30</odom_publish_frequency>

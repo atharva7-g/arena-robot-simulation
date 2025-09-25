@@ -27,11 +27,11 @@ class MoveBaseToPosition(Node):
         self.ang_tol = self.get_parameter("angle_tolerance").value
 
         # Publisher to cmd_vel
-        self.cmd_pub = self.create_publisher(Twist, "/cmd_vel", 10)
+        self.cmd_pub = self.create_publisher(Twist, "/sarm/cmd_vel", 10)
 
         # Subscriber to odom
         self.odom_sub = self.create_subscription(
-            Odometry, "/odom", self.odom_callback, 10
+            Odometry, "/sarm/odom", self.odom_callback, 10
         )
 
         # Current robot pose
