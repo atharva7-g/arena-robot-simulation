@@ -176,6 +176,7 @@ def generate_launch_description():
             "/scan/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
             "/cam_1/depth_image@sensor_msgs/msg/Image@gz.msgs.Image",
             "/cam_1/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
+            "/sarm_description@std_msgs/msg/String@gz.msgs.StringMsg"
         ],
         output="screen",
         parameters=[
@@ -199,7 +200,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(spawn_urdf_node)
     launchDescriptionObject.add_action(robot_state_publisher_node)
     launchDescriptionObject.add_action(gz_bridge_node)
-    launchDescriptionObject.add_action(spawn_sarm_node)
     launchDescriptionObject.add_action(sarm_state_publisher_node)
+    launchDescriptionObject.add_action(spawn_sarm_node)
 
     return launchDescriptionObject
