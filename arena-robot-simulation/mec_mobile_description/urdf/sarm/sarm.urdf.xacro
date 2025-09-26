@@ -14,45 +14,7 @@
     <xacro:include
         filename="$(find mec_mobile_description)/urdf/mech/sarm_base.urdf.xacro"
     />
-    <xacro:include
-        filename="$(find sarm_base_control)/urdf/control/mec_mobile.gazebo"
-    />
 
-    <xacro:robot_3d_base prefix="$(arg prefix)" />
-
-    <xacro:mecanum_wheel
-        prefix="$(arg prefix)"
-        side="front_left"
-        x_reflect="1"
-        y_reflect="1"
-    />
-
-    <xacro:mecanum_wheel
-        prefix="$(arg prefix)"
-        side="front_right"
-        x_reflect="1"
-        y_reflect="-1"
-    />
-
-    <xacro:mecanum_wheel
-        prefix="$(arg prefix)"
-        side="back_left"
-        x_reflect="-1"
-        y_reflect="1"
-    />
-
-    <xacro:mecanum_wheel
-        prefix="$(arg prefix)"
-        side="back_right"
-        x_reflect="-1"
-        y_reflect="-1"
-    />
-
-
-
-
-
-    <!-- 2.4 add Gazebo frictions -->
     <gazebo reference='front_left_wheel_link'>
       <collision>
         <surface>
@@ -109,9 +71,31 @@
       </collision>
     </gazebo>
 
-    <gazebo reference="base_link">
-      <mu1>0.000002</mu1>
-      <mu2>0.000002</mu2>
-      <!-- <material>Gazebo/Red</material> -->
-    </gazebo>
+    <xacro:sarm_mecanum_wheel
+        prefix="$(arg prefix)"
+        side="front_left"
+        x_reflect="1"
+        y_reflect="1"
+    />
+
+    <xacro:sarm_mecanum_wheel
+        prefix="$(arg prefix)"
+        side="front_right"
+        x_reflect="1"
+        y_reflect="-1"
+    />
+
+    <xacro:sarm_mecanum_wheel
+        prefix="$(arg prefix)"
+        side="back_left"
+        x_reflect="-1"
+        y_reflect="1"
+    />
+
+    <xacro:sarm_mecanum_wheel
+        prefix="$(arg prefix)"
+        side="back_right"
+        x_reflect="-1"
+        y_reflect="-1"
+    />
 </robot>
