@@ -18,6 +18,7 @@
         <geometry>
           <mesh
                         filename="file://$(find mec_mobile_description)/meshes/sarm/visual/${side}_wheel.stl"
+                        scale="0.001 0.001 0.001"
                     />
         </geometry>
         <material name="dark_gray">

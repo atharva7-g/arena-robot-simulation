@@ -28,9 +28,9 @@
     />
 
     <!-- Include gazebo control -->
-    <xacro:include
+    <!-- <xacro:include
         filename="$(find mec_mobile_description)/urdf/control/mec_mobile.gazebo"
-    />
+    /> -->
 
     <!-- Instantiate robot base -->
     <xacro:robot_3d_base prefix="$(arg prefix)" />
@@ -59,29 +59,6 @@
         side="back_right"
         x_reflect="-1"
         y_reflect="-1"
-    />
-
-    <!-- Lidar -->
-    <xacro:lidar_sensor
-        prefix="$(arg prefix)"
-        parent="$(arg prefix)base_link"
-        frame_id="laser_frame"
-        xyz_offset="0 0 0.0825"
-        rpy_offset="0 0 ${M_PI}"
-        mesh_xyz_offset="0 0 0"
-        mesh_rpy_offset="${-M_PI/2} 0 0"
-        topic_name="scan"
-    />
-
-    <!-- IMU -->
-    <xacro:imu_sensor
-        prefix="$(arg prefix)"
-        parent="$(arg prefix)base_link"
-        frame_id="imu"
-        xyz_offset="0 0 0.006"
-        rpy_offset="0 0 0"
-        update_rate="15.0"
-        topic_name="imu/data"
     />
 
     <!-- Gazebo friction for wheels -->
