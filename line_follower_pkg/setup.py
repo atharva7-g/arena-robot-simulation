@@ -12,7 +12,7 @@ setup(
     ],
     install_requires=["setuptools"],
     zip_safe=True,
-    maintainer="hephan",
+    maintainer="ash-blake",
     maintainer_email="mad.shadank@gmail.com",
     description="TODO: Package description",
     license="Apache-2.0",
