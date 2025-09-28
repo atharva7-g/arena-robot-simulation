@@ -98,7 +98,7 @@
         <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
         <geometry>
           <mesh
-                        filename="/home/ash-blake/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/visual/${side}_wheel.stl"
+                        filename="/home/hephan/lfr_ws/src/arena-robot-simulation/mec_mobile_description/meshes/sarm/visual/${side}_wheel.stl"
                     />
         </geometry>
         <material name="dark_gray">
