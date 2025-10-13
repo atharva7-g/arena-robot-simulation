@@ -6,7 +6,7 @@
         name="wheel_radius"
         value="${3.5 * scale}"
     /> <!-- Remove hardcoded values -->
-  <xacro:property name="wheel_separation" value="0.169" />
+  <xacro:property name="wheel_separation" value="${0.169 * scale}" />
   <xacro:property name="wheel_width" value="${30.5 * scale}" />
   <xacro:property name="wheel_mass" value="${9.1 * scale * scale * scale}" />
   <xacro:property name="wheel_xoff" value="0.02" />

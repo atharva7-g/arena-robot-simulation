@@ -23,7 +23,7 @@
 
   <xacro:property name="wheel_xoff" value="0.02" />
   <xacro:property name="wheel_yoff" value="0.0" />
-  <xacro:property name="wheel_separation" value="0.169" />
+  <xacro:property name="wheel_separation" value="${0.169 * scale}" />
 
   <!-- Macro -->
   <xacro:macro name="sarm_base" params="prefix">
