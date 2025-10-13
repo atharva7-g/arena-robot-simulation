@@ -4,13 +4,13 @@
 <xacro:property name="scale" value="0.001" />
   <xacro:property
         name="wheel_radius"
-        value="${0.0325 * scale}"
+        value="${3.5 * scale}"
     /> <!-- Remove hardcoded values -->
   <xacro:property name="wheel_separation" value="0.169" />
-  <xacro:property name="wheel_width" value="${0.03040 * scale}" />
+  <xacro:property name="wheel_width" value="${30.5 * scale}" />
   <xacro:property name="wheel_mass" value="${9.1 * scale * scale * scale}" />
-  <xacro:property name="wheel_xoff" value="${0.02}" />
-  <xacro:property name="wheel_yoff" value="${0}" />
+  <xacro:property name="wheel_xoff" value="0.02" />
+  <xacro:property name="wheel_yoff" value="0" />
 
   <xacro:macro
         name="sarm_mecanum_wheel"
@@ -22,7 +22,7 @@
         <geometry>
           <mesh
                         filename="file://$(find mec_mobile_description)/meshes/sarm/visual/${side}_wheel.stl"
-                        scale="0.001 0.001 0.001"
+                        scale="${scale} ${scale} ${scale}"
                     />
         </geometry>
         <material name="dark_gray">
@@ -56,7 +56,7 @@
       <parent link="${prefix}base_link" />
       <child link="${prefix}${side}_wheel_link" />
       <origin
-                xyz="${x_reflect*wheel_xoff} ${y_reflect*(wheel_separation/2+wheel_yoff)} 0"
+                xyz="${x_reflect*wheel_xoff} ${y_reflect*(wheel_separation/2+wheel_yoff)} -${wheel_radius}"
                 rpy="0 0 0"
             />
     </joint>

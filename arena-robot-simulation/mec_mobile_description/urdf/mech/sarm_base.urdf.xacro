@@ -3,7 +3,7 @@
 
   <!-- Properties -->
   <xacro:property name="scale" value="0.001" />
-  <xacro:property name="wheel_radius" value="${35 * scale}" />
+  <xacro:property name="wheel_radius" value="${3.5 * scale}" />
   <xacro:property name="wheel_width" value="${30.5 * scale}" />
   <xacro:property name="total_width" value="${360 * scale}" />
   <xacro:property name="total_height" value="${140 * scale}" />
@@ -21,7 +21,7 @@
     />
   <xacro:property name="base_mass" value="${4.6 * scale * scale * scale}" />
 
-  <xacro:property name="wheel_xoff" value="0.05" />
+  <xacro:property name="wheel_xoff" value="0.02" />
   <xacro:property name="wheel_yoff" value="0.0" />
   <xacro:property name="wheel_separation" value="0.169" />
 

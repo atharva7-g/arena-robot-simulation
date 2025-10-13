@@ -46,7 +46,7 @@
         prefix="$(arg prefix)"
         side="front_right"
         x_reflect="1"
-        y_reflect="-1"
+        y_reflect="1"
     />
     <xacro:sarm_mecanum_wheel
         prefix="$(arg prefix)"
@@ -58,7 +58,7 @@
         prefix="$(arg prefix)"
         side="back_right"
         x_reflect="-1"
-        y_reflect="-1"
+        y_reflect="1"
     />
 
     <!-- Gazebo friction for wheels -->
