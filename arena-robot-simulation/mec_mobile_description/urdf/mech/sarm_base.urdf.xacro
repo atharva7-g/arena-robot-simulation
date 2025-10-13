@@ -2,13 +2,13 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Properties -->
-  <xacro:property name="scale" value="0.001" />
-  <xacro:property name="wheel_radius" value="${0.0325 * scale}" />
-  <xacro:property name="wheel_width" value="${0.0304 * scale}" />
-  <xacro:property name="total_width" value="${0.1994 * scale}" />
-  <xacro:property name="total_height" value="${0.16225 * scale}" />
-  <xacro:property name="base_length" value="${0.3 * scale}" />
-  <xacro:property name="centered_length" value="${0.238 * scale}" />
+  <xacro:property name="scale" value="0.0001" />
+  <xacro:property name="wheel_radius" value="${35 * scale}" />
+  <xacro:property name="wheel_width" value="${30.5 * scale}" />
+  <xacro:property name="total_width" value="${360 * scale}" />
+  <xacro:property name="total_height" value="${140 * scale}" />
+  <xacro:property name="base_length" value="${300 * scale}" />
+  <xacro:property name="centered_length" value="${38.5 * scale}" />
   <xacro:property
         name="base_x_offset"
         value="${(centered_length - base_length)/2}"
@@ -36,6 +36,7 @@
         <geometry>
           <mesh
                         filename="file://$(find mec_mobile_description)/meshes/sarm/chassis.stl"
+                        scale="${scale} ${scale} ${scale}"
                     />
         </geometry>
         <material name="white">
