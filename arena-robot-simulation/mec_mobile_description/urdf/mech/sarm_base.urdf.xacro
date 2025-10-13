@@ -6,8 +6,8 @@
   <xacro:property name="wheel_radius" value="${3.5 * scale}" />
   <xacro:property name="wheel_width" value="${30.5 * scale}" />
   <xacro:property name="total_width" value="${360 * scale}" />
-  <xacro:property name="total_height" value="${140 * scale}" />
-  <xacro:property name="base_length" value="${300 * scale}" />
+  <xacro:property name="total_height" value="${100 * scale}" />
+  <xacro:property name="base_length" value="${225 * scale}" />
   <xacro:property name="centered_length" value="${38.5 * scale}" />
   <xacro:property
         name="base_x_offset"
